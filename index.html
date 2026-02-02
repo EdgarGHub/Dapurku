@@ -1,48 +1,1707 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#4F46E5" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="icons/icon-192x192-A.png" type="image/png" />
-  <title>PWA Template Responsif</title>
-  <link rel="stylesheet" href="assets/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#A8D5BA">
+    <meta name="description" content="Aplikasi manajemen dapur dan resep">
+    <title>Dapurku - Smart Kitchen Manager</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Manifest for PWA -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkRhcHVya3UgLSBTbWFydCBLaXRjaGVuIE1hbmFnZXIiLAogICJzaG9ydF9uYW1lIjogIkRhcHVya3UiLAogICJkZXNjcmlwdGlvbiI6ICJBcGxpa2FzaSBtYW5hamVtZW4gZGFwdXIgZGFuIHJlc2VwIiwKICAic3RhcnRfdXJsIjogIi4vIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmZmZmZmIiwKICAidGhlbWVfY29sb3IiOiAiI0E4RDVCQSIKFQ==">
+    
+    <style>
+        /* ===== CSS Variables ===== */
+        :root {
+            --primary-color: #A8D5BA;
+            --primary-dark: #7FB992;
+            --secondary-color: #E8F5E9;
+            --text-primary: #2C3E50;
+            --text-secondary: #7F8C8D;
+            --bg-light: #F8F9FA;
+            --bg-white: #FFFFFF;
+            --border-color: #E0E0E0;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #F44336;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.15);
+            --transition: all 0.3s ease;
+        }
+        
+        [data-theme="dark"] {
+            --primary-color: #7FB992;
+            --primary-dark: #A8D5BA;
+            --secondary-color: #1E3A2F;
+            --text-primary: #E0E0E0;
+            --text-secondary: #B0B0B0;
+            --bg-light: #1A1A1A;
+            --bg-white: #2D2D2D;
+            --border-color: #404040;
+            --shadow: 0 2px 8px rgba(0,0,0,0.3);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        
+        /* ===== Global Styles ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-primary);
+            transition: var(--transition);
+            padding-bottom: 80px;
+        }
+        
+        /* ===== Header ===== */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .app-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .theme-toggle, .lang-toggle {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .theme-toggle:hover, .lang-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+        
+        /* ===== Main Content ===== */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 1rem;
+        }
+        
+        /* ===== Cards ===== */
+        .card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            margin-bottom: 1rem;
+        }
+        
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+        
+        /* ===== Buttons ===== */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-add {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-hover);
+            z-index: 999;
+            transition: var(--transition);
+        }
+        
+        .btn-add:hover {
+            transform: scale(1.1) rotate(90deg);
+        }
+        
+        /* ===== Bottom Navigation ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .nav-item i {
+            font-size: 1.5rem;
+        }
+        
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+        
+        .nav-item:hover {
+            color: var(--primary-color);
+        }
+        
+        /* ===== Page Sections ===== */
+        .page-section {
+            display: none;
+        }
+        
+        .page-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ===== Stats Cards ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-card {
+            background: var(--bg-white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        
+        /* ===== Item Lists ===== */
+        .item-list {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .item-card {
+            background: var(--bg-white);
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+        
+        .item-card:hover {
+            transform: translateX(5px);
+        }
+        
+        .item-info {
+            flex: 1;
+        }
+        
+        .item-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+        
+        .item-details {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: none;
+            background: var(--secondary-color);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .btn-icon:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        /* ===== Status Badges ===== */
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .status-cukup {
+            background: #E8F5E9;
+            color: #4CAF50;
+        }
+        
+        .status-menipis {
+            background: #FFF3E0;
+            color: #FF9800;
+        }
+        
+        .status-habis {
+            background: #FFEBEE;
+            color: #F44336;
+        }
+        
+        /* ===== Modal Overlay ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: var(--bg-white);
+            border-radius: 16px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-hover);
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        /* ===== Forms ===== */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-white);
+            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(168, 213, 186, 0.2);
+        }
+        
+        /* ===== Recipe Cards ===== */
+        .recipe-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .recipe-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+        }
+        
+        .recipe-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .recipe-match {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+        
+        .recipe-body {
+            padding: 1.5rem;
+        }
+        
+        .recipe-ingredients {
+            margin-bottom: 1rem;
+        }
+        
+        .ingredient-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .ingredient-item:last-child {
+            border-bottom: none;
+        }
+        
+        .ingredient-available {
+            color: var(--success-color);
+        }
+        
+        .ingredient-missing {
+            color: var(--danger-color);
+        }
+        
+        /* ===== Empty State ===== */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .empty-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .empty-text {
+            color: var(--text-secondary);
+        }
+        
+        /* ===== Loading Spinner ===== */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .loading-overlay.active {
+            display: flex;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* ===== Shopping List ===== */
+        .shopping-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+        
+        .shopping-checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+        
+        .shopping-item.checked .item-name {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+        
+        /* ===== Search and Filter ===== */
+        .search-filter-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-box {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        
+        .search-box input {
+            padding-left: 3rem;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-white);
+            color: var(--text-primary);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.875rem;
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* ===== Responsive ===== */
+        @media (max-width: 576px) {
+            .app-title {
+                font-size: 1.25rem;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            
+            .item-name {
+                font-size: 1rem;
+            }
+            
+            .item-details {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+        }
+        
+        /* ===== Splash Screen ===== */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeOut 0.5s ease 2s forwards;
+        }
+        
+        .splash-icon {
+            font-size: 5rem;
+            color: white;
+            margin-bottom: 1rem;
+            animation: bounce 1s ease infinite;
+        }
+        
+        .splash-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        
+        .splash-subtitle {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+    </style>
 </head>
-
 <body>
-  <header class="header">
-    <h1>PWA Template</h1>
-    <p>Contoh aplikasi web progresif yang responsif</p>
-  </header>
+    <!-- Splash Screen -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-icon">🍳</div>
+        <div class="splash-title">Dapurku</div>
+        <div class="splash-subtitle">Smart Kitchen Manager</div>
+    </div>
 
-  <main class="main">
-    <section class="card">
-      <h2>Selamat Datang!</h2>
-      <p>
-        Ini adalah template PWA responsif. Kamu bisa ubah teks, warna, dan layout-nya sesuai kebutuhan.
-      </p>
-      <button onclick="alert('PWA aktif!')">Tes Tombol</button>
-    </section>
-  </main>
-  <button onclick="alert('tombol testing hidup')">Ini tombol 1</button>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
 
-  <footer class="footer">
-    <p>© 2025 Anwar Fauzi</p>
-  </footer>
+    <!-- App Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="app-title">
+                <i class="bi bi-egg-fried"></i>
+                <span id="headerTitle">Dapurku</span>
+            </div>
+            <div class="header-actions">
+                <button class="lang-toggle" id="langToggle" title="Change Language">
+                    <i class="bi bi-translate"></i>
+                </button>
+                <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+                    <i class="bi bi-moon-fill"></i>
+                </button>
+            </div>
+        </div>
+    </header>
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./service-worker.js')
-        .then(() => console.log('SW registered!'))
-        .catch(err => console.error('SW gagal:', err));
-    }
-  </script>
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Page -->
+        <section class="page-section active" id="homePage">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalItems">0</div>
+                    <div class="stat-label" data-lang-id="total_items" data-lang-en="Total Items">Total Items</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="lowStockItems">0</div>
+                    <div class="stat-label" data-lang-id="low_stock" data-lang-en="Low Stock">Stok Menipis</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalRecipes">0</div>
+                    <div class="stat-label" data-lang-id="recipes" data-lang-en="Recipes">Resep</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-3" data-lang-id="recent_activity" data-lang-en="Recent Activity">Aktivitas Terbaru</h5>
+                    <div id="recentActivity">
+                        <div class="empty-state">
+                            <div class="empty-icon">📊</div>
+                            <div class="empty-title" data-lang-id="no_activity" data-lang-en="No Recent Activity">Belum Ada Aktivitas</div>
+                            <div class="empty-text" data-lang-id="start_adding" data-lang-en="Start by adding items to your pantry">Mulai dengan menambahkan bahan ke pantry Anda</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <!-- Pantry Page -->
+        <section class="page-section" id="pantryPage">
+            <div class="search-filter-section">
+                <div class="search-box">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" class="form-control" id="searchPantry" data-lang-id-placeholder="search_items" data-lang-en-placeholder="Search items..." placeholder="Cari bahan...">
+                </div>
+                <div class="filter-buttons" id="categoryFilters">
+                    <button class="filter-btn active" data-category="all" data-lang-id="all" data-lang-en="All">Semua</button>
+                    <button class="filter-btn" data-category="beras" data-lang-id="grain" data-lang-en="Grains">Beras</button>
+                    <button class="filter-btn" data-category="protein" data-lang-id="protein" data-lang-en="Protein">Protein</button>
+                    <button class="filter-btn" data-category="sayur" data-lang-id="vegetables" data-lang-en="Vegetables">Sayur</button>
+                    <button class="filter-btn" data-category="bumbu" data-lang-id="spices" data-lang-en="Spices">Bumbu</button>
+                    <button class="filter-btn" data-category="lainnya" data-lang-id="others" data-lang-en="Others">Lainnya</button>
+                </div>
+            </div>
+            
+            <div class="item-list" id="pantryList">
+                <div class="empty-state">
+                    <div class="empty-icon">🥘</div>
+                    <div class="empty-title" data-lang-id="empty_pantry" data-lang-en="Your Pantry is Empty">Pantry Anda Kosong</div>
+                    <div class="empty-text" data-lang-id="add_first_item" data-lang-en="Add your first item using the + button">Tambahkan item pertama Anda dengan tombol +</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recipes Page -->
+        <section class="page-section" id="recipesPage">
+            <div class="mb-3">
+                <button class="btn btn-primary w-100" id="addRecipeBtn">
+                    <i class="bi bi-plus-circle"></i> <span data-lang-id="add_recipe" data-lang-en="Add New Recipe">Tambah Resep Baru</span>
+                </button>
+            </div>
+            
+            <h5 class="mb-3" data-lang-id="suggested_recipes" data-lang-en="Suggested Recipes">Resep yang Disarankan</h5>
+            <div class="item-list" id="recipeList">
+                <div class="empty-state">
+                    <div class="empty-icon">📖</div>
+                    <div class="empty-title" data-lang-id="no_recipes" data-lang-en="No Recipes Yet">Belum Ada Resep</div>
+                    <div class="empty-text" data-lang-id="create_first_recipe" data-lang-en="Create your first recipe to get started">Buat resep pertama Anda untuk memulai</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shopping List Page -->
+        <section class="page-section" id="shoppingPage">
+            <div class="mb-3">
+                <button class="btn btn-primary w-100" id="addShoppingItemBtn">
+                    <i class="bi bi-plus-circle"></i> <span data-lang-id="add_item" data-lang-en="Add Item">Tambah Item</span>
+                </button>
+            </div>
+            
+            <div id="shoppingList">
+                <div class="empty-state">
+                    <div class="empty-icon">🛒</div>
+                    <div class="empty-title" data-lang-id="empty_shopping" data-lang-en="Shopping List is Empty">Daftar Belanja Kosong</div>
+                    <div class="empty-text" data-lang-id="items_auto_added" data-lang-en="Items will be added automatically when stock runs out">Item akan ditambahkan otomatis saat stok habis</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Item Button -->
+    <button class="btn-add" id="addBtn">
+        <i class="bi bi-plus-lg"></i>
+    </button>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a class="nav-item active" data-page="home">
+            <i class="bi bi-house-fill"></i>
+            <span data-lang-id="home" data-lang-en="Home">Home</span>
+        </a>
+        <a class="nav-item" data-page="pantry">
+            <i class="bi bi-box-seam"></i>
+            <span data-lang-id="pantry" data-lang-en="Pantry">Pantry</span>
+        </a>
+        <a class="nav-item" data-page="recipes">
+            <i class="bi bi-book"></i>
+            <span data-lang-id="recipes" data-lang-en="Recipes">Resep</span>
+        </a>
+        <a class="nav-item" data-page="shopping">
+            <i class="bi bi-cart"></i>
+            <span data-lang-id="shopping" data-lang-en="Shopping">Belanja</span>
+        </a>
+    </nav>
+
+    <!-- Add/Edit Pantry Item Modal -->
+    <div class="modal-overlay" id="pantryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pantryModalTitle" data-lang-id="add_item" data-lang-en="Add Item">Tambah Bahan</h5>
+                <button class="modal-close" onclick="closePantryModal()">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="pantryForm">
+                    <input type="hidden" id="itemId">
+                    <div class="form-group">
+                        <label class="form-label" data-lang-id="item_name" data-lang-en="Item Name">Nama Bahan</label>
+                        <input type="text" class="form-control" id="itemName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-lang-id="category" data-lang-en="Category">Kategori</label>
+                        <select class="form-control" id="itemCategory" required>
+                            <option value="beras" data-lang-id="grain" data-lang-en="Grains">Beras</option>
+                            <option value="protein" data-lang-id="protein" data-lang-en="Protein">Protein</option>
+                            <option value="sayur" data-lang-id="vegetables" data-lang-en="Vegetables">Sayur</option>
+                            <option value="bumbu" data-lang-id="spices" data-lang-en="Spices">Bumbu</option>
+                            <option value="lainnya" data-lang-id="others" data-lang-en="Others">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-lang-id="quantity" data-lang-en="Quantity">Jumlah</label>
+                        <input type="number" class="form-control" id="itemQuantity" step="0.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-lang-id="unit" data-lang-en="Unit">Satuan</label>
+                        <select class="form-control" id="itemUnit" required>
+                            <option value="kg">kg</option>
+                            <option value="g">g</option>
+                            <option value="pcs">pcs</option>
+                            <option value="ml">ml</option>
+                            <option value="l">l</option>
+                            <option value="sdm">sdm</option>
+                            <option value="sdt">sdt</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-lang-id="min_stock" data-lang-en="Minimum Stock">Stok Minimum</label>
+                        <input type="number" class="form-control" id="itemMinStock" step="0.1" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100" data-lang-id="save" data-lang-en="Save">Simpan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Recipe Modal -->
+    <div class="modal-overlay" id="recipeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" data-lang-id="add_recipe" data-lang-en="Add Recipe">Tambah Resep</h5>
+                <button class="modal-close" onclick="closeRecipeModal()">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="recipeForm">
+                    <input type="hidden" id="recipeId">
+                    <div class="form-group">
+                        <label class="form-label" data-lang-id="recipe_name" data-lang-en="Recipe Name">Nama Resep</label>
+                        <input type="text" class="form-control" id="recipeName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-lang-id="ingredients" data-lang-en="Ingredients">Bahan-bahan (satu per baris)</label>
+                        <textarea class="form-control" id="recipeIngredients" rows="5" required placeholder="Contoh:
+beras - 2 cup
+ayam - 500 g
+bawang merah - 3 siung"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-lang-id="instructions" data-lang-en="Instructions">Cara Membuat</label>
+                        <textarea class="form-control" id="recipeInstructions" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100" data-lang-id="save" data-lang-en="Save">Simpan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe Detail Modal -->
+    <div class="modal-overlay" id="recipeDetailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="recipeDetailTitle">Resep</h5>
+                <button class="modal-close" onclick="closeRecipeDetailModal()">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="recipeDetailBody">
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Shopping Item Modal -->
+    <div class="modal-overlay" id="shoppingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" data-lang-id="add_item" data-lang-en="Add Item">Tambah Item</h5>
+                <button class="modal-close" onclick="closeShoppingModal()">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="shoppingForm">
+                    <div class="form-group">
+                        <label class="form-label" data-lang-id="item_name" data-lang-en="Item Name">Nama Item</label>
+                        <input type="text" class="form-control" id="shoppingItemName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-lang-id="quantity" data-lang-en="Quantity">Jumlah</label>
+                        <input type="text" class="form-control" id="shoppingItemQuantity" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100" data-lang-id="add" data-lang-en="Add">Tambah</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ===== Application State =====
+        const APP_STATE = {
+            currentPage: 'home',
+            currentLang: 'id',
+            theme: 'light',
+            pantryItems: [],
+            recipes: [],
+            shoppingList: [],
+            currentEditId: null
+        };
+
+        // ===== Translations =====
+        const TRANSLATIONS = {
+            id: {
+                home: 'Home',
+                pantry: 'Pantry',
+                recipes: 'Resep',
+                shopping: 'Belanja',
+                total_items: 'Total Items',
+                low_stock: 'Stok Menipis',
+                recent_activity: 'Aktivitas Terbaru',
+                no_activity: 'Belum Ada Aktivitas',
+                start_adding: 'Mulai dengan menambahkan bahan ke pantry Anda',
+                search_items: 'Cari bahan...',
+                all: 'Semua',
+                grain: 'Beras',
+                protein: 'Protein',
+                vegetables: 'Sayur',
+                spices: 'Bumbu',
+                others: 'Lainnya',
+                empty_pantry: 'Pantry Anda Kosong',
+                add_first_item: 'Tambahkan item pertama Anda dengan tombol +',
+                add_recipe: 'Tambah Resep Baru',
+                suggested_recipes: 'Resep yang Disarankan',
+                no_recipes: 'Belum Ada Resep',
+                create_first_recipe: 'Buat resep pertama Anda untuk memulai',
+                add_item: 'Tambah Item',
+                empty_shopping: 'Daftar Belanja Kosong',
+                items_auto_added: 'Item akan ditambahkan otomatis saat stok habis',
+                item_name: 'Nama Bahan',
+                category: 'Kategori',
+                quantity: 'Jumlah',
+                unit: 'Satuan',
+                min_stock: 'Stok Minimum',
+                save: 'Simpan',
+                recipe_name: 'Nama Resep',
+                ingredients: 'Bahan-bahan',
+                instructions: 'Cara Membuat',
+                add: 'Tambah',
+                cukup: 'Cukup',
+                menipis: 'Menipis',
+                habis: 'Habis'
+            },
+            en: {
+                home: 'Home',
+                pantry: 'Pantry',
+                recipes: 'Recipes',
+                shopping: 'Shopping',
+                total_items: 'Total Items',
+                low_stock: 'Low Stock',
+                recent_activity: 'Recent Activity',
+                no_activity: 'No Recent Activity',
+                start_adding: 'Start by adding items to your pantry',
+                search_items: 'Search items...',
+                all: 'All',
+                grain: 'Grains',
+                protein: 'Protein',
+                vegetables: 'Vegetables',
+                spices: 'Spices',
+                others: 'Others',
+                empty_pantry: 'Your Pantry is Empty',
+                add_first_item: 'Add your first item using the + button',
+                add_recipe: 'Add New Recipe',
+                suggested_recipes: 'Suggested Recipes',
+                no_recipes: 'No Recipes Yet',
+                create_first_recipe: 'Create your first recipe to get started',
+                add_item: 'Add Item',
+                empty_shopping: 'Shopping List is Empty',
+                items_auto_added: 'Items will be added automatically when stock runs out',
+                item_name: 'Item Name',
+                category: 'Category',
+                quantity: 'Quantity',
+                unit: 'Unit',
+                min_stock: 'Minimum Stock',
+                save: 'Save',
+                recipe_name: 'Recipe Name',
+                ingredients: 'Ingredients',
+                instructions: 'Instructions',
+                add: 'Add',
+                cukup: 'Sufficient',
+                menipis: 'Low',
+                habis: 'Out'
+            }
+        };
+
+        // ===== Dummy Data =====
+        const DUMMY_DATA = {
+            pantryItems: [
+                { id: 1, name: 'Beras', category: 'beras', quantity: 5, unit: 'kg', minStock: 2, status: 'cukup' },
+                { id: 2, name: 'Ayam', category: 'protein', quantity: 1, unit: 'kg', minStock: 0.5, status: 'cukup' },
+                { id: 3, name: 'Bawang Merah', category: 'bumbu', quantity: 0.2, unit: 'kg', minStock: 0.5, status: 'menipis' },
+                { id: 4, name: 'Wortel', category: 'sayur', quantity: 0, unit: 'kg', minStock: 0.5, status: 'habis' }
+            ],
+            recipes: [
+                {
+                    id: 1,
+                    name: 'Nasi Goreng',
+                    ingredients: ['beras - 2 cup', 'ayam - 200 g', 'bawang merah - 3 siung', 'kecap - 2 sdm'],
+                    instructions: '1. Panaskan minyak\n2. Tumis bawang merah\n3. Masukkan ayam\n4. Tambahkan nasi\n5. Beri kecap dan aduk rata'
+                },
+                {
+                    id: 2,
+                    name: 'Sup Ayam',
+                    ingredients: ['ayam - 500 g', 'wortel - 2 buah', 'bawang merah - 2 siung'],
+                    instructions: '1. Rebus ayam\n2. Tambahkan wortel\n3. Beri bumbu\n4. Masak hingga matang'
+                }
+            ]
+        };
+
+        // ===== Local Storage Functions =====
+        function saveToLocalStorage(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        function getFromLocalStorage(key, defaultValue = []) {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : defaultValue;
+        }
+
+        // ===== Initialize App =====
+        function initApp() {
+            // Load data from localStorage or use dummy data
+            APP_STATE.pantryItems = getFromLocalStorage('pantryItems', DUMMY_DATA.pantryItems);
+            APP_STATE.recipes = getFromLocalStorage('recipes', DUMMY_DATA.recipes);
+            APP_STATE.shoppingList = getFromLocalStorage('shoppingList', []);
+            APP_STATE.theme = getFromLocalStorage('theme', 'light');
+            APP_STATE.currentLang = getFromLocalStorage('lang', 'id');
+
+            // Apply theme
+            document.documentElement.setAttribute('data-theme', APP_STATE.theme);
+            updateThemeIcon();
+
+            // Apply language
+            updateLanguage();
+
+            // Update UI
+            updateStats();
+            renderPantryList();
+            renderRecipeList();
+            renderShoppingList();
+            checkLowStock();
+
+            // Setup event listeners
+            setupEventListeners();
+
+            // Remove splash screen
+            setTimeout(() => {
+                document.getElementById('splashScreen').style.display = 'none';
+            }, 2500);
+        }
+
+        // ===== Event Listeners =====
+        function setupEventListeners() {
+            // Navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const page = this.getAttribute('data-page');
+                    navigateToPage(page);
+                });
+            });
+
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+            // Language toggle
+            document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+
+            // Add button
+            document.getElementById('addBtn').addEventListener('click', () => {
+                if (APP_STATE.currentPage === 'pantry') {
+                    openPantryModal();
+                } else if (APP_STATE.currentPage === 'recipes') {
+                    openRecipeModal();
+                } else if (APP_STATE.currentPage === 'shopping') {
+                    openShoppingModal();
+                }
+            });
+
+            // Forms
+            document.getElementById('pantryForm').addEventListener('submit', handlePantrySubmit);
+            document.getElementById('recipeForm').addEventListener('submit', handleRecipeSubmit);
+            document.getElementById('shoppingForm').addEventListener('submit', handleShoppingSubmit);
+
+            // Add recipe button
+            document.getElementById('addRecipeBtn').addEventListener('click', openRecipeModal);
+
+            // Add shopping item button
+            document.getElementById('addShoppingItemBtn').addEventListener('click', openShoppingModal);
+
+            // Search
+            document.getElementById('searchPantry').addEventListener('input', handleSearch);
+
+            // Category filters
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    filterByCategory(this.getAttribute('data-category'));
+                });
+            });
+        }
+
+        // ===== Navigation =====
+        function navigateToPage(page) {
+            APP_STATE.currentPage = page;
+            
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-page') === page) {
+                    item.classList.add('active');
+                }
+            });
+
+            // Update pages
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(page + 'Page').classList.add('active');
+        }
+
+        // ===== Theme Toggle =====
+        function toggleTheme() {
+            APP_STATE.theme = APP_STATE.theme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', APP_STATE.theme);
+            saveToLocalStorage('theme', APP_STATE.theme);
+            updateThemeIcon();
+        }
+
+        function updateThemeIcon() {
+            const icon = document.querySelector('#themeToggle i');
+            icon.className = APP_STATE.theme === 'light' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
+        }
+
+        // ===== Language Toggle =====
+        function toggleLanguage() {
+            APP_STATE.currentLang = APP_STATE.currentLang === 'id' ? 'en' : 'id';
+            saveToLocalStorage('lang', APP_STATE.currentLang);
+            updateLanguage();
+        }
+
+        function updateLanguage() {
+            const lang = APP_STATE.currentLang;
+            
+            // Update all elements with data-lang attributes
+            document.querySelectorAll('[data-lang-id]').forEach(el => {
+                const key = el.getAttribute('data-lang-' + lang);
+                if (key) {
+                    el.textContent = key;
+                }
+            });
+
+            // Update placeholders
+            document.querySelectorAll('[data-lang-id-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-lang-' + lang + '-placeholder');
+                if (key) {
+                    el.placeholder = key;
+                }
+            });
+
+            // Update header title
+            document.getElementById('headerTitle').textContent = 'Dapurku';
+
+            // Re-render lists to update status badges
+            renderPantryList();
+            renderRecipeList();
+        }
+
+        // ===== Stats Update =====
+        function updateStats() {
+            const totalItems = APP_STATE.pantryItems.length;
+            const lowStockItems = APP_STATE.pantryItems.filter(item => 
+                item.status === 'menipis' || item.status === 'habis'
+            ).length;
+            const totalRecipes = APP_STATE.recipes.length;
+
+            document.getElementById('totalItems').textContent = totalItems;
+            document.getElementById('lowStockItems').textContent = lowStockItems;
+            document.getElementById('totalRecipes').textContent = totalRecipes;
+        }
+
+        // ===== Pantry Functions =====
+        function openPantryModal(item = null) {
+            APP_STATE.currentEditId = item ? item.id : null;
+            const modal = document.getElementById('pantryModal');
+            const title = document.getElementById('pantryModalTitle');
+            
+            if (item) {
+                title.setAttribute('data-lang-id', 'edit_item');
+                title.setAttribute('data-lang-en', 'Edit Item');
+                title.textContent = APP_STATE.currentLang === 'id' ? 'Edit Bahan' : 'Edit Item';
+                document.getElementById('itemId').value = item.id;
+                document.getElementById('itemName').value = item.name;
+                document.getElementById('itemCategory').value = item.category;
+                document.getElementById('itemQuantity').value = item.quantity;
+                document.getElementById('itemUnit').value = item.unit;
+                document.getElementById('itemMinStock').value = item.minStock;
+            } else {
+                title.setAttribute('data-lang-id', 'add_item');
+                title.setAttribute('data-lang-en', 'Add Item');
+                title.textContent = APP_STATE.currentLang === 'id' ? 'Tambah Bahan' : 'Add Item';
+                document.getElementById('pantryForm').reset();
+                document.getElementById('itemId').value = '';
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closePantryModal() {
+            document.getElementById('pantryModal').classList.remove('active');
+            document.getElementById('pantryForm').reset();
+            APP_STATE.currentEditId = null;
+        }
+
+        function handlePantrySubmit(e) {
+            e.preventDefault();
+            
+            const itemData = {
+                name: document.getElementById('itemName').value,
+                category: document.getElementById('itemCategory').value,
+                quantity: parseFloat(document.getElementById('itemQuantity').value),
+                unit: document.getElementById('itemUnit').value,
+                minStock: parseFloat(document.getElementById('itemMinStock').value)
+            };
+
+            // Calculate status
+            if (itemData.quantity === 0) {
+                itemData.status = 'habis';
+            } else if (itemData.quantity <= itemData.minStock) {
+                itemData.status = 'menipis';
+            } else {
+                itemData.status = 'cukup';
+            }
+
+            if (APP_STATE.currentEditId) {
+                // Update existing item
+                const index = APP_STATE.pantryItems.findIndex(item => item.id === APP_STATE.currentEditId);
+                APP_STATE.pantryItems[index] = { ...APP_STATE.pantryItems[index], ...itemData };
+            } else {
+                // Add new item
+                itemData.id = Date.now();
+                APP_STATE.pantryItems.push(itemData);
+            }
+
+            saveToLocalStorage('pantryItems', APP_STATE.pantryItems);
+            closePantryModal();
+            renderPantryList();
+            updateStats();
+            checkLowStock();
+        }
+
+        function deletePantryItem(id) {
+            if (confirm(APP_STATE.currentLang === 'id' ? 'Hapus item ini?' : 'Delete this item?')) {
+                APP_STATE.pantryItems = APP_STATE.pantryItems.filter(item => item.id !== id);
+                saveToLocalStorage('pantryItems', APP_STATE.pantryItems);
+                renderPantryList();
+                updateStats();
+            }
+        }
+
+        function renderPantryList(items = null) {
+            const list = document.getElementById('pantryList');
+            const itemsToRender = items || APP_STATE.pantryItems;
+
+            if (itemsToRender.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🥘</div>
+                        <div class="empty-title" data-lang-id="empty_pantry" data-lang-en="Your Pantry is Empty">${APP_STATE.currentLang === 'id' ? 'Pantry Anda Kosong' : 'Your Pantry is Empty'}</div>
+                        <div class="empty-text" data-lang-id="add_first_item" data-lang-en="Add your first item using the + button">${APP_STATE.currentLang === 'id' ? 'Tambahkan item pertama Anda dengan tombol +' : 'Add your first item using the + button'}</div>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = itemsToRender.map(item => {
+                const statusText = APP_STATE.currentLang === 'id' ? 
+                    (item.status === 'cukup' ? 'Cukup' : item.status === 'menipis' ? 'Menipis' : 'Habis') :
+                    (item.status === 'cukup' ? 'Sufficient' : item.status === 'menipis' ? 'Low' : 'Out');
+                
+                return `
+                    <div class="item-card">
+                        <div class="item-info">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-details">
+                                <span><i class="bi bi-tag"></i> ${item.category}</span>
+                                <span><i class="bi bi-box"></i> ${item.quantity} ${item.unit}</span>
+                                <span class="status-badge status-${item.status}">${statusText}</span>
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-icon" onclick='openPantryModal(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn-icon" onclick="deletePantryItem(${item.id})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ===== Recipe Functions =====
+        function openRecipeModal(recipe = null) {
+            APP_STATE.currentEditId = recipe ? recipe.id : null;
+            const modal = document.getElementById('recipeModal');
+            
+            if (recipe) {
+                document.getElementById('recipeId').value = recipe.id;
+                document.getElementById('recipeName').value = recipe.name;
+                document.getElementById('recipeIngredients').value = recipe.ingredients.join('\n');
+                document.getElementById('recipeInstructions').value = recipe.instructions;
+            } else {
+                document.getElementById('recipeForm').reset();
+                document.getElementById('recipeId').value = '';
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeRecipeModal() {
+            document.getElementById('recipeModal').classList.remove('active');
+            document.getElementById('recipeForm').reset();
+            APP_STATE.currentEditId = null;
+        }
+
+        function handleRecipeSubmit(e) {
+            e.preventDefault();
+            
+            const recipeData = {
+                name: document.getElementById('recipeName').value,
+                ingredients: document.getElementById('recipeIngredients').value.split('\n').filter(i => i.trim()),
+                instructions: document.getElementById('recipeInstructions').value
+            };
+
+            if (APP_STATE.currentEditId) {
+                const index = APP_STATE.recipes.findIndex(r => r.id === APP_STATE.currentEditId);
+                APP_STATE.recipes[index] = { ...APP_STATE.recipes[index], ...recipeData };
+            } else {
+                recipeData.id = Date.now();
+                APP_STATE.recipes.push(recipeData);
+            }
+
+            saveToLocalStorage('recipes', APP_STATE.recipes);
+            closeRecipeModal();
+            renderRecipeList();
+            updateStats();
+        }
+
+        function deleteRecipe(id) {
+            if (confirm(APP_STATE.currentLang === 'id' ? 'Hapus resep ini?' : 'Delete this recipe?')) {
+                APP_STATE.recipes = APP_STATE.recipes.filter(r => r.id !== id);
+                saveToLocalStorage('recipes', APP_STATE.recipes);
+                renderRecipeList();
+                updateStats();
+            }
+        }
+
+        function showRecipeDetail(recipe) {
+            const modal = document.getElementById('recipeDetailModal');
+            document.getElementById('recipeDetailTitle').textContent = recipe.name;
+            
+            // Calculate match percentage
+            const pantryItemNames = APP_STATE.pantryItems
+                .filter(item => item.quantity > 0)
+                .map(item => item.name.toLowerCase());
+            
+            const recipeIngredients = recipe.ingredients.map(ing => {
+                const name = ing.split('-')[0].trim().toLowerCase();
+                const available = pantryItemNames.some(pi => pi.includes(name) || name.includes(pi));
+                return { text: ing, available };
+            });
+            
+            const matchCount = recipeIngredients.filter(ing => ing.available).length;
+            const matchPercentage = Math.round((matchCount / recipeIngredients.length) * 100);
+            
+            const ingredientsList = recipeIngredients.map(ing => `
+                <div class="ingredient-item ${ing.available ? 'ingredient-available' : 'ingredient-missing'}">
+                    <i class="bi ${ing.available ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}"></i>
+                    <span>${ing.text}</span>
+                </div>
+            `).join('');
+            
+            document.getElementById('recipeDetailBody').innerHTML = `
+                <div class="mb-3">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> ${APP_STATE.currentLang === 'id' ? 'Kecocokan bahan' : 'Ingredient match'}: ${matchPercentage}%
+                    </div>
+                </div>
+                <h6 class="mb-3">${APP_STATE.currentLang === 'id' ? 'Bahan-bahan' : 'Ingredients'}:</h6>
+                <div class="recipe-ingredients mb-4">
+                    ${ingredientsList}
+                </div>
+                <h6 class="mb-3">${APP_STATE.currentLang === 'id' ? 'Cara Membuat' : 'Instructions'}:</h6>
+                <p style="white-space: pre-line;">${recipe.instructions}</p>
+                <div class="mt-3">
+                    <button class="btn btn-primary me-2" onclick='openRecipeModal(${JSON.stringify(recipe).replace(/'/g, "&apos;")})'>
+                        <i class="bi bi-pencil"></i> ${APP_STATE.currentLang === 'id' ? 'Edit' : 'Edit'}
+                    </button>
+                    <button class="btn btn-danger" onclick="deleteRecipe(${recipe.id}); closeRecipeDetailModal();">
+                        <i class="bi bi-trash"></i> ${APP_STATE.currentLang === 'id' ? 'Hapus' : 'Delete'}
+                    </button>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        function closeRecipeDetailModal() {
+            document.getElementById('recipeDetailModal').classList.remove('active');
+        }
+
+        function renderRecipeList() {
+            const list = document.getElementById('recipeList');
+
+            if (APP_STATE.recipes.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📖</div>
+                        <div class="empty-title">${APP_STATE.currentLang === 'id' ? 'Belum Ada Resep' : 'No Recipes Yet'}</div>
+                        <div class="empty-text">${APP_STATE.currentLang === 'id' ? 'Buat resep pertama Anda untuk memulai' : 'Create your first recipe to get started'}</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Calculate match for each recipe
+            const pantryItemNames = APP_STATE.pantryItems
+                .filter(item => item.quantity > 0)
+                .map(item => item.name.toLowerCase());
+
+            const recipesWithMatch = APP_STATE.recipes.map(recipe => {
+                const ingredients = recipe.ingredients.map(ing => ing.split('-')[0].trim().toLowerCase());
+                const matchCount = ingredients.filter(ing => 
+                    pantryItemNames.some(pi => pi.includes(ing) || ing.includes(pi))
+                ).length;
+                const matchPercentage = Math.round((matchCount / ingredients.length) * 100);
+                return { ...recipe, matchPercentage, matchCount, totalIngredients: ingredients.length };
+            });
+
+            // Sort by match percentage
+            recipesWithMatch.sort((a, b) => b.matchPercentage - a.matchPercentage);
+
+            list.innerHTML = recipesWithMatch.map(recipe => `
+                <div class="recipe-card" onclick='showRecipeDetail(${JSON.stringify(recipe).replace(/'/g, "&apos;")})'>
+                    <div class="recipe-header">
+                        <div class="recipe-title">${recipe.name}</div>
+                        <div class="recipe-match">
+                            <i class="bi bi-pie-chart-fill"></i> 
+                            ${APP_STATE.currentLang === 'id' ? 'Kecocokan' : 'Match'}: ${recipe.matchPercentage}% 
+                            (${recipe.matchCount}/${recipe.totalIngredients} ${APP_STATE.currentLang === 'id' ? 'bahan' : 'ingredients'})
+                        </div>
+                    </div>
+                    <div class="recipe-body">
+                        <div class="text-muted small">
+                            <i class="bi bi-list-ul"></i> ${recipe.ingredients.length} ${APP_STATE.currentLang === 'id' ? 'bahan' : 'ingredients'}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ===== Shopping List Functions =====
+        function openShoppingModal() {
+            document.getElementById('shoppingModal').classList.add('active');
+        }
+
+        function closeShoppingModal() {
+            document.getElementById('shoppingModal').classList.remove('active');
+            document.getElementById('shoppingForm').reset();
+        }
+
+        function handleShoppingSubmit(e) {
+            e.preventDefault();
+            
+            const item = {
+                id: Date.now(),
+                name: document.getElementById('shoppingItemName').value,
+                quantity: document.getElementById('shoppingItemQuantity').value,
+                checked: false,
+                manual: true
+            };
+
+            APP_STATE.shoppingList.push(item);
+            saveToLocalStorage('shoppingList', APP_STATE.shoppingList);
+            closeShoppingModal();
+            renderShoppingList();
+        }
+
+        function toggleShoppingItem(id) {
+            const item = APP_STATE.shoppingList.find(i => i.id === id);
+            if (item) {
+                item.checked = !item.checked;
+                saveToLocalStorage('shoppingList', APP_STATE.shoppingList);
+                renderShoppingList();
+            }
+        }
+
+        function deleteShoppingItem(id) {
+            APP_STATE.shoppingList = APP_STATE.shoppingList.filter(i => i.id !== id);
+            saveToLocalStorage('shoppingList', APP_STATE.shoppingList);
+            renderShoppingList();
+        }
+
+        function renderShoppingList() {
+            const list = document.getElementById('shoppingList');
+
+            if (APP_STATE.shoppingList.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🛒</div>
+                        <div class="empty-title">${APP_STATE.currentLang === 'id' ? 'Daftar Belanja Kosong' : 'Shopping List is Empty'}</div>
+                        <div class="empty-text">${APP_STATE.currentLang === 'id' ? 'Item akan ditambahkan otomatis saat stok habis' : 'Items will be added automatically when stock runs out'}</div>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = APP_STATE.shoppingList.map(item => `
+                <div class="shopping-item ${item.checked ? 'checked' : ''}">
+                    <input type="checkbox" class="shopping-checkbox" ${item.checked ? 'checked' : ''} 
+                           onchange="toggleShoppingItem(${item.id})">
+                    <div class="item-info flex-grow-1">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-details">
+                            <span>${item.quantity}</span>
+                            ${item.manual ? '' : '<span class="badge bg-info">Auto</span>'}
+                        </div>
+                    </div>
+                    <button class="btn-icon" onclick="deleteShoppingItem(${item.id})">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // ===== Check Low Stock =====
+        function checkLowStock() {
+            // Remove auto-added items that are no longer out of stock
+            APP_STATE.shoppingList = APP_STATE.shoppingList.filter(item => {
+                if (item.manual) return true;
+                const pantryItem = APP_STATE.pantryItems.find(p => p.name === item.name);
+                return !pantryItem || pantryItem.status === 'habis';
+            });
+
+            // Add items that are out of stock
+            APP_STATE.pantryItems.forEach(item => {
+                if (item.status === 'habis') {
+                    const exists = APP_STATE.shoppingList.find(s => s.name === item.name && !s.manual);
+                    if (!exists) {
+                        APP_STATE.shoppingList.push({
+                            id: Date.now() + Math.random(),
+                            name: item.name,
+                            quantity: `${item.minStock} ${item.unit}`,
+                            checked: false,
+                            manual: false
+                        });
+                    }
+                }
+            });
+
+            saveToLocalStorage('shoppingList', APP_STATE.shoppingList);
+            renderShoppingList();
+        }
+
+        // ===== Search and Filter =====
+        function handleSearch(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = APP_STATE.pantryItems.filter(item => 
+                item.name.toLowerCase().includes(searchTerm)
+            );
+            renderPantryList(filtered);
+        }
+
+        function filterByCategory(category) {
+            if (category === 'all') {
+                renderPantryList();
+            } else {
+                const filtered = APP_STATE.pantryItems.filter(item => item.category === category);
+                renderPantryList(filtered);
+            }
+        }
+
+        // ===== Service Worker Registration =====
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swCode = `
+                    const CACHE_NAME = 'dapurku-v1';
+                    const urlsToCache = ['/'];
+                    
+                    self.addEventListener('install', event => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME)
+                                .then(cache => cache.addAll(urlsToCache))
+                        );
+                    });
+                    
+                    self.addEventListener('fetch', event => {
+                        event.respondWith(
+                            caches.match(event.request)
+                                .then(response => response || fetch(event.request))
+                        );
+                    });
+                `;
+                
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                
+                navigator.serviceWorker.register(swUrl)
+                    .then(registration => console.log('SW registered:', registration))
+                    .catch(error => console.log('SW registration failed:', error));
+            });
+        }
+
+        // ===== Initialize on Load =====
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
 </body>
-
 </html>
